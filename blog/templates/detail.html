@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <!--css-->
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+    <!--폰트어썸 아이콘-->
+    <script src="https://kit.fontawesome.com/6e7751ea5a.js" crossorigin="anonymous"></script>
+    <!--폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Hi+Melody&family=Itim&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Hi+Melody&family=Itim&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Castoro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--네브바 자바-->
+    <script src="{% static 'css/main.js' %}" defer></script>
+    <script type="text/javascript">
+        // 인증에 따른 수정, 삭제 버튼 숨김처리
+        for(i = 0; i < $(".writer_name").length; i++){
+            if($("#user_name").text() == $(".writer_name")[i].innerHTML){
+                $("#control_id"+i).removeClass("hidden");
+            }
+        }
+    </script>
+    <script>
+        function share() {
+            var url = encodeURI(encodeURIComponent(myform.url.value));
+            var title = encodeURI(myform.title.value);
+            var shareURL = "https://share.naver.com/web/shareView?url=" + url + "&title=" + title;
+            document.location = shareURL;
+        }
+    </script>
+    <title>글 상세 보기</title>
+</head>
+
+<body>
+    <!--네브바-->
+    <nav class="navbar">     
+
+        <ul class="navbar_logo">
+            <li><a href="{% url 'home' %}"><i class="fas fa-check-square"></i></a></li>
+            <li><a href="{% url 'home' %}" id="rr">Gollaba</a></li>
+        </ul>
+              
+        <ul class="navbar_menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">HOME</a>
+            </li>
+              
+            {% if not user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            {% endif %}
+    
+    
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% endif %}
+    
+            {% if not user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Signup</a>
+            </li>
+            {% endif %}
+              
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'mypage' %}">MYPAGE</a>
+              {% endif %}
+            </li>
+  
+          <li><a href="https://twitter.com/TwitterKorea"><i class="fab fa-twitter-square"></i></a></li>
+          <li><a href="https://www.instagram.com/"><i class="fab fa-instagram-square"></i></a></li>
+           
+          </ul>
+          <a class="navbar_toggleBtn" href="#"><i class="fas fa-bars"></i></a>
+  
+    </nav>
+    <!-- 글 상세 보기 -->
+    <div class="content-box">
+
+        <div class="blank1">
+        
+        </div>
+
+        <div class="outer">
+            <!-- 글 정보 -->
+            <div class="title">
+                <h2>{{ blog.title }}</h2>
+                <p class="date">날짜: {{ blog.pub_date }}</p>
+            </div>
+
+            <br>
+
+            <!-- 본문 -->
+            <div class="body">
+                <p>{{ blog.body }}</p>
+            </div>
+
+            <br>
+
+            <!-- 해시태그 -->
+            <p class="hashtag">
+                {% for hashtag in hashtags.all %}
+                #{{ hashtag }}
+                {% endfor %}
+            </p>
+            
+            <!-- 투표 및 기타 버튼 -->
+            <div class="buttons">
+                <a class="btn" href="{% url 'main' %}">vote</a>
+                <a href="{% url 'home' %}" class="btn" >Home</a>
+                <a href="{% url 'edit' blog.id %}" class="btn">Edit</a>
+                <a href="{% url 'delete' blog.id %}" class="btn">Delete</a>
+            </div>
+            
+            <!-- 공유 -->
+            <div class="shares">
+                
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+
+            <!-- Your share button code -->
+            <div class="fb-share-button" 
+                data-href="https://www.your-domain.com/your-page.html" 
+                data-layout="button_count">
+            </div>
+
+            <a href="http://blog.naver.com/openapi/share?url=%22+encodeURIComponent(%22http://www.sample.com/sample.jsp?param1=value1&param2=value2"><input type="button" value="naver" class="share_naver" onclick="share()"/></a>
+            </div>
+            <hr>
+
+            <!-- 댓글 추가 -->
+            
+            
+            {% for comment in blog.comments.all %}
+            
+            <div class="comment">
+                <strong> {{ user.username }}</strong>
+                <div class="date">  {{ comment.created_at }}</div>
+                <p> {{comment.comment_text|linebreaks }}</p>
+            </div>
+            {% empty %}
+            
+            <p>댓글을 달아주세요 :)</p>
+            {% endfor %}
+            
+            <hr>
+            <div class="comments">
+                {% if not user.is_authenticated %}
+                    <p><a href="{% url 'login' %}">로그인 후 댓글 달기 <i class="fas fa-sign-in-alt"></i></a></p>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <span>댓글 달기 : </span>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input name="body" type="text" value="">
+                    <input class="btnsubmit" type="submit" value="저장">
+                </form>
+                {% endif %}
+                        
+                    </div>
+                    <div class="blank2">
+                        
+                    </div>
+                </div>
+            </div>
+       
+            
+    </body>
+
+
+</html>
+
